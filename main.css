@@ -1,0 +1,12 @@
+.event{
+    position: absolute;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    opacity: 0.8;
+    transform: translateY(50%);
+}
+
+.event::before{
+    content: '';
+}
