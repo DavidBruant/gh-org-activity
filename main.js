@@ -60,10 +60,10 @@ function render(events){
 
 // fetch repos of the org
 
-const cachedEvents = localStorage.getItem(org+'-events');
+const cachedEventsP = remember(org+'-events');
 
-if(!cachedEvents){
-    orgRepos(org)
+cachedEventsP
+.then(events => events ? events : orgRepos(org)
     .then(repos => {
         // sort by most recently updated
         repos.sort((r1, r2) => new Date(r2.updated_at).getTime() - new Date(r1.updated_at).getTime());
@@ -76,14 +76,13 @@ if(!cachedEvents){
     .then( eventsByRepo => {
         var events = eventsByRepo[0];
         console.log('eventsByRepo', events);
-        render(events);
-        localStorage.setItem(org+'-events', JSON.stringify(events));
+        
+        remember(org+'-events', events);
+        return events;
     })
-    .catch(err => console.error(err, err.stack));
-}
-else{
-    render(JSON.parse(cachedEvents));
-}
+    .catch(err => console.error(err, err.stack))
+)
+.then(render);
 
 
 

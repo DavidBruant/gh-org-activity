@@ -2,6 +2,8 @@
 
 const format = "dddd, MMMM Do YYYY, h:mm:ss a";
 
+const rel = React.createElement;
+
 /*
     TODO:
     * Users
@@ -24,45 +26,68 @@ var GithubOrgActivity = React.createClass({
         const max = Math.max(...timestamps);
         const min = Math.min(...timestamps);
         
-        const nbUsers = new Set(events.map(e => e.actor.id)).size;
+        const users = new Map();
+        events.forEach(e => users.set(e.actor.id, e.actor));
         
-        const colorByUserId = new Map();
+        const colorByUserId = new Map(
+            [...users].map(([id], i) => [id, 'hsl('+360*i/users.size+', 40%, 60%)'])
+        );
         const shiftByUserId = new Map();
         
-        return React.createElement('div', {style: {width: '100%', minHeight: '100%', position: 'relative'}},
-            React.createElement('div', {style: {position: 'absolute', top: '0'}}, moment(max).format(format)),
-            React.createElement('div', {style: {position: 'absolute', bottom: '0'}}, moment(min).format(format)),
-            events.map(e => {
-                const date = new Date(e.created_at);
-                const userId = e.actor.id;
+        return rel('div', {className: 'github-org-activity'},
+            rel('section', {className: 'users'},
+                [...users].map(([id, user]) => {
+                    const color = colorByUserId.get(id);
             
-                let color = colorByUserId.get(userId);
-                if(color === undefined){
-                    color = 'hsl('+360*(colorByUserId.size)/nbUsers+', 40%, 60%)';
-                    colorByUserId.set(userId, color);
-                }
-            
-                let shift = shiftByUserId.get(userId);
-                if(shift === undefined){
-                    shift = shiftByUserId.size;
-                    shiftByUserId.set(userId, shift);
-                }
-            
-                return React.createElement('div',
-                    {
-                        className: 'event',
-                        title: moment(date).format('YYYY-MM-DD'),
-                        style: {
-                            bottom: 5+(90*(date.getTime() - min)/(max-min))+'%',
-                            backgroundColor: color,
-                            left: 'calc(20% + '+shift/2+'em)'
-                        },
-                        onClick: function(){
-                            console.log('event', e, 'by', e.actor);
-                        }
+                    return rel('div', {},
+                        rel('button',
+                            { style: { backgroundColor: color } },
+                            rel('img', {src: user.avatar_url})
+                        ),       
+                        rel('a',
+                            { href: 'https://github.com/'+user.login, target: '_blank' },
+                            user.login
+                        )
+                    )
+                    
+                    
+                })
+            ),
+            rel('section', 
+                {
+                    style: {width: '100%', minHeight: '80%', position: 'absolute'},
+                    className: 'viz'
+                },
+                rel('div', {style: {position: 'absolute', top: '0'}}, moment(max).format(format)),
+                rel('div', {style: {position: 'absolute', bottom: '0'}}, moment(min).format(format)),
+                events.map(e => {
+                    const date = new Date(e.created_at);
+                    const userId = e.actor.id;
+
+                    let color = colorByUserId.get(userId);
+
+                    let shift = shiftByUserId.get(userId);
+                    if(shift === undefined){
+                        shift = shiftByUserId.size;
+                        shiftByUserId.set(userId, shift);
                     }
-                )
-            })
+
+                    return rel('div',
+                        {
+                            className: 'event',
+                            title: moment(date).format('YYYY-MM-DD'),
+                            style: {
+                                bottom: 5+(90*(date.getTime() - min)/(max-min))+'%',
+                                backgroundColor: color,
+                                left: 'calc(20% + '+shift/2+'em)'
+                            },
+                            onClick: function(){
+                                console.log('event', e, 'by', e.actor);
+                            }
+                        }
+                    )
+                })
+            )
         );
     }
 });
