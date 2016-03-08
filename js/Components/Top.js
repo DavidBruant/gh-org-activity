@@ -5,7 +5,7 @@ var Top = React.createClass({
     
     render: function(){
         const {props} = this;
-        const {onOrgChange, eventsByRepo} = props;
+        const {onOrgChange, eventsByRepo, githubAPIRateInfos} = props;
         
         return ϼ('section', {},
             ϼ('header', {},
@@ -19,7 +19,7 @@ var Top = React.createClass({
                 ), 
                 ϼ('button', {}, "✔"), // totally useless, just so the user focuses on something else
                 
-                ϼ(GithubAPIIndicator, {})
+                ϼ(GithubAPIIndicator, githubAPIRateInfos)
             ),
             
             eventsByRepo ? ϼ(GithubOrgActivity, props) : undefined

@@ -9,8 +9,10 @@ var GithubAPIIndicator = React.createClass({
         const {props} = this;
         const {login, remaining, limit, reset, method} = props;
         
-        return ϼ('section', {},
-            'Github API indicator'
+        return ϼ('section', {className: 'github-api-indicator'},
+            login ? 'Hi '+login+'!' : undefined,
+            ϼ('div', {}, remaining, '/', limit),
+            ϼ('div', {}, moment(reset).fromNow())
         )
     }
 });

@@ -17,7 +17,7 @@ function getOrgData(org){
         repos.sort((r1, r2) => new Date(r2.updated_at).getTime() - new Date(r1.updated_at).getTime());
         console.log('repos', repos);
 
-        const consideredRepos = repos.slice(0, 4);
+        const consideredRepos = repos.slice(0, 1);
 
         return Promise.all(consideredRepos.map(r => allRepoEvents(r.full_name)))
         .then(events => events.reduce(

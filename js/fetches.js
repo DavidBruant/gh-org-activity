@@ -3,13 +3,15 @@
 function fetchJSON(url){
     return fetch(url, {headers: {'Content-Type': 'application/json'}})
     .then(resp => {
-        console.log(
-            'Rate limit',
-            resp.headers.get('X-RateLimit-Remaining'), '/', resp.headers.get('X-RateLimit-Limit'),
-            '('+
-            ((Number(resp.headers.get('X-RateLimit-Reset')) - Math.round(Date.now()/1000))/60).toFixed(1)
-            +'mins remaining)'
-        );
+        // this function shouldn't have access to this. TODO figure out another way
+        store.dispatch({
+            type: 'GITHUB_API_RATE_INFOS',
+            githubAPIRateInfos: new Immutable.Map({
+                remaining: Number(resp.headers.get('X-RateLimit-Remaining')),
+                limit: Number(resp.headers.get('X-RateLimit-Limit')),
+                reset: Number(resp.headers.get('X-RateLimit-Reset'))*1000
+            })
+        })
         
         if(resp.status >= 400){
             return resp.text()
