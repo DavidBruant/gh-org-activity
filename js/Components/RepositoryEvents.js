@@ -10,7 +10,7 @@ var RepositoryEvents = React.createClass({
         const {events, repo, colorByUserId, max, min} = props;
         
         const nbEventsByUserId = new Map();
-        events.forEach(e => {
+        for(let e of events){
             const userId = e.actor.id;
             const nbEvents = nbEventsByUserId.get(userId);
                   
@@ -18,7 +18,7 @@ var RepositoryEvents = React.createClass({
                 userId,
                 nbEvents ? nbEvents+1 : 1
             )
-        });
+        }
         
         
         const shiftByUserId = new Map(
@@ -29,7 +29,7 @@ var RepositoryEvents = React.createClass({
                     id,
                     i === 0 ?
                         0 : 
-                        (i % 2 === 0 ? 1 : -1) * Math.floor(i/2)
+                        (i % 2 === 0 ? 1 : -1) * Math.ceil(i/2)
                 ]
             })
         );
@@ -57,7 +57,7 @@ var RepositoryEvents = React.createClass({
                         style: {
                             bottom: 5+(90*(date.getTime() - min)/(max-min))+'%',
                             backgroundColor: color,
-                            left: 'calc(50% + '+shift/2+'em)'
+                            left: 'calc(50% + '+shift/1.5+'em)'
                         },
                         onClick: function(){
                             console.log(

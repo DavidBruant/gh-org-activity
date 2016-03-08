@@ -1,23 +1,15 @@
 "use strict";
 
-const format = "dddd, MMMM Do YYYY, h:mm:ss a";
+const format = 'MMMM Do YYYY';
 
 const rel = React.createElement;
 
-/*
-    TODO:
-    * Repos
-        * Add one line per repo
-        * Shift should be per repo
-        * Put to the center the most active users of the repo
-*/
-
 var GithubOrgActivity = React.createClass({
     displayName: "GithubOrgActivity",
-    
+  
     render: function(){
         const {props} = this;
-        const {eventsByRepo, repos} = props;
+        const {eventsByRepo, repos, org} = props;
         
         const allEvents = flatten([...eventsByRepo].map(([repo, events]) => events) );
         console.log('allEvents', allEvents)
@@ -27,7 +19,8 @@ var GithubOrgActivity = React.createClass({
         const min = Math.min(...timestamps);
         
         const users = new Map();
-        allEvents.forEach(e => users.set(e.actor.id, e.actor));
+        for(let e of allEvents)
+            users.set(e.actor.id, e.actor);
         
         const colorByUserId = new Map(
             [...users].map(([id], i) => [id, 'hsl('+360*i/users.size+', 40%, 60%)'])
