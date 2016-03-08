@@ -1,7 +1,7 @@
 "use strict";
 
 function reducer(state, action){
-    console.log('reducer', state, action);
+    console.log('reducer', action.type, state, action);
     
     switch(action.type){
         case 'ORG_DATA':

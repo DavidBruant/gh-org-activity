@@ -29,7 +29,7 @@ var GithubOrgActivity = React.createClass({
                 [...users].map(([id, user]) => {
                     const color = colorByUserId.get(id);
             
-                    return ϼ('div', {},
+                    return ϼ('div', {key: id},
                         ϼ('button',
                             { style: { backgroundColor: color } },
                             ϼ('img', {src: user.avatar_url})
@@ -48,6 +48,7 @@ var GithubOrgActivity = React.createClass({
                 ϼ('div', {style: {position: 'absolute', bottom: 0, right: 0}}, moment(min).format(format)),
                 repos.map(repo => ϼ(RepositoryEvents, 
                     {
+                        key: repo.id,
                         events: eventsByRepo.get(repo),
                         repo: repo,
                         colorByUserId: colorByUserId,

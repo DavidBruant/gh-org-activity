@@ -7,8 +7,6 @@ var RepositoryEvents = React.createClass({
         const {props} = this;
         const {events, repo, colorByUserId, max, min} = props;
         
-        console.log('RepositoryEvents props', events, max, min, props)
-        
         const nbEventsByUserId = new Map();
         for(let e of events){
             const userId = e.actor.id;
@@ -33,9 +31,7 @@ var RepositoryEvents = React.createClass({
                 ]
             })
         );
-        
-        console.log('shiftByUserId', repo.name, [...shiftByUserId]);
-        
+                
         return ϼ('section', 
             {
                 className: 'repo-events'
@@ -44,13 +40,12 @@ var RepositoryEvents = React.createClass({
             events.map(e => {
                 const date = new Date(e.created_at);
                 const userId = e.actor.id;
-
-                let color = colorByUserId.get(userId);
-
-                let shift = shiftByUserId.get(userId);
+                const color = colorByUserId.get(userId);
+                const shift = shiftByUserId.get(userId);
 
                 return ϼ('div',
                     {
+                        key: e.id,
                         className: 'event',
                         title: moment(date).format('YYYY-MM-DD'),
                         style: {
