@@ -9,9 +9,8 @@ var GithubAPIIndicator = React.createClass({
         const {props} = this;
         const {login, remaining, limit, reset, method} = props;
         
-        return rel('section', {},
+        return ϼ('section', {},
             'Github API indicator'
-                  
         )
     }
 });

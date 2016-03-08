@@ -5,11 +5,13 @@ const { createStore } = Redux;
 const { render } = ReactDOM;
 
 const org = 'emailjs';
-const GITHUB_API_URL_PREFIX = 'https://api.github.com';
 
-const EL = React.createElement;
+const ϼ = React.createElement;
 
-// const store = createStore(todoApp);
+const store = createStore(
+    reducer,
+    new Immutable.Map()
+);
 
 /*
     TODO:
@@ -18,30 +20,14 @@ const EL = React.createElement;
 */
 const container = document.body;
 
-function refresh(props){
-    render(
-        EL(Top, Object.assign({
-            onOrgChange: function(org){
-                console.log('New org!!', org);
-            }
-        }, props)),
-        container
-    )
-}
-
-/*
 render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
+    ϼ(Provider, {store: store}, ϼ(TopContainer)),
+    container
 )
-*/
-
 
 /*
     Start !
 */
 getOrgData(org)
-.then(refresh)
+.then(data => store.dispatch({type: 'ORG_DATA', data: new Immutable.Map(data)}))
 .catch(err => console.error(err, err.stack))

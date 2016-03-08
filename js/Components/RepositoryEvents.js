@@ -1,13 +1,13 @@
 "use strict";
 
-// const rel = React.createElement;
-
 var RepositoryEvents = React.createClass({
     displayName: "RepositoryEvents",
     
     render: function(){
         const {props} = this;
         const {events, repo, colorByUserId, max, min} = props;
+        
+        console.log('RepositoryEvents props', events, max, min, props)
         
         const nbEventsByUserId = new Map();
         for(let e of events){
@@ -36,12 +36,11 @@ var RepositoryEvents = React.createClass({
         
         console.log('shiftByUserId', repo.name, [...shiftByUserId]);
         
-        
-        return rel('section', 
+        return ϼ('section', 
             {
                 className: 'repo-events'
             },
-            rel('div', {className: 'repo-name'}, repo.name),
+            ϼ('div', {className: 'repo-name'}, repo.name),
             events.map(e => {
                 const date = new Date(e.created_at);
                 const userId = e.actor.id;
@@ -50,7 +49,7 @@ var RepositoryEvents = React.createClass({
 
                 let shift = shiftByUserId.get(userId);
 
-                return rel('div',
+                return ϼ('div',
                     {
                         className: 'event',
                         title: moment(date).format('YYYY-MM-DD'),

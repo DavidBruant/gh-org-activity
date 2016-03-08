@@ -1,5 +1,7 @@
 "use strict";
 
+const GITHUB_API_URL_PREFIX = 'https://api.github.com';
+
 function orgRepos(org){
     return fetchMemoized([
         GITHUB_API_URL_PREFIX,

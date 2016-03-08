@@ -1,17 +1,15 @@
 "use strict";
 
-// const rel = React.createElement;
-
 var Top = React.createClass({
     displayName: "Top",
     
     render: function(){
         const {props} = this;
-        const {onOrgChange} = props;
+        const {onOrgChange, eventsByRepo} = props;
         
-        return rel('section', {},
-            rel('header', {},
-                rel('h1', 
+        return ϼ('section', {},
+            ϼ('header', {},
+                ϼ('h1', 
                     {
                         contentEditable: true,
                         spellCheck: false,
@@ -19,13 +17,12 @@ var Top = React.createClass({
                     },
                     org
                 ), 
-                rel('button', {}, "✔"), // totally useless, just so the user focuses on something else
+                ϼ('button', {}, "✔"), // totally useless, just so the user focuses on something else
                 
-                rel(GithubAPIIndicator, {})
+                ϼ(GithubAPIIndicator, {})
             ),
             
-            rel(GithubOrgActivity, props)
-                  
+            eventsByRepo ? ϼ(GithubOrgActivity, props) : undefined
         )
     }
 });

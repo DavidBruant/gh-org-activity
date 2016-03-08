@@ -2,8 +2,6 @@
 
 const format = 'MMMM Do YYYY';
 
-const rel = React.createElement;
-
 var GithubOrgActivity = React.createClass({
     displayName: "GithubOrgActivity",
   
@@ -26,17 +24,17 @@ var GithubOrgActivity = React.createClass({
             [...users].map(([id], i) => [id, 'hsl('+360*i/users.size+', 40%, 60%)'])
         );
         
-        return rel('div', {className: 'github-org-activity'},
-            rel('section', {className: 'users'},
+        return ϼ('div', {className: 'github-org-activity'},
+            ϼ('section', {className: 'users'},
                 [...users].map(([id, user]) => {
                     const color = colorByUserId.get(id);
             
-                    return rel('div', {},
-                        rel('button',
+                    return ϼ('div', {},
+                        ϼ('button',
                             { style: { backgroundColor: color } },
-                            rel('img', {src: user.avatar_url})
+                            ϼ('img', {src: user.avatar_url})
                         ),       
-                        rel('a',
+                        ϼ('a',
                             { href: 'https://github.com/'+user.login, target: '_blank' },
                             user.login
                         )
@@ -45,10 +43,10 @@ var GithubOrgActivity = React.createClass({
                     
                 })
             ),   
-            rel('section', {className: 'repos'},
-                rel('div', {style: {position: 'absolute', top: 0, right: 0}}, moment(max).format(format)),
-                rel('div', {style: {position: 'absolute', bottom: 0, right: 0}}, moment(min).format(format)),
-                repos.map(repo => rel(RepositoryEvents, 
+            ϼ('section', {className: 'repos'},
+                ϼ('div', {style: {position: 'absolute', top: 0, right: 0}}, moment(max).format(format)),
+                ϼ('div', {style: {position: 'absolute', bottom: 0, right: 0}}, moment(min).format(format)),
+                repos.map(repo => ϼ(RepositoryEvents, 
                     {
                         events: eventsByRepo.get(repo),
                         repo: repo,
