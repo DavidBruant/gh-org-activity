@@ -4,8 +4,6 @@ const { Provider } = ReactRedux;
 const { createStore } = Redux;
 const { render } = ReactDOM;
 
-const org = 'sudweb';
-
 const ϼ = React.createElement;
 
 const store = createStore(
@@ -59,15 +57,44 @@ store.subscribe( () => {
     previousState = state;
 });
 
-remember('personal-access-token')
-.then(testTokenAndDispatchIfValid)
 
 /*
     Start !
 */
-githubAPI.getOrgData(org)
-.then(data => store.dispatch({type: 'ORG_DATA', data: new Immutable.Map(data)}))
-.catch(err => console.error(err, err.stack))
+
+
+remember('personal-access-token')
+.then(testTokenAndDispatchIfValid)
+.catch(err => console.error('personal-access-token error', err))
+.then( () => {
+    /*
+        get org from query parameter
+        if none
+    */
+    const url = new URL(location);
+
+    let tentativeOrg;
+    const paramOrg = url.searchParams.get('org');
+    if(paramOrg){
+        tentativeOrg = paramOrg;
+    }
+    else{
+        const dotGithubDotIOIndex = url.hostname.lastIndexOf('.github.io');
+        if(dotGithubDotIOIndex !== -1)
+            tentativeOrg = url.hostname.slice(0, dotGithubDotIOIndex);
+    }
+
+    if(tentativeOrg){
+        githubAPI.orgInfos(tentativeOrg)
+        .then(org => githubAPI.getOrgData(org.login)
+            .then(data => store.dispatch({type: 'ORG_DATA', data: new Immutable.Map(data), org: org}))
+            .catch(err => console.error(err, err.stack))
+        )
+    }
+})
+
+
+
 
 const container = document.body;
 

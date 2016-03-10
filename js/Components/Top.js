@@ -7,7 +7,7 @@ var Top = React.createClass({
         const {props} = this;
         const {
             onOrgChange, eventsByRepo, githubAPIRateInfos,
-            onPersonalAccessToken, authenticatedUser
+            onPersonalAccessToken, authenticatedUser, org
         } = props;
         
         return ϼ('section', {},
@@ -18,7 +18,7 @@ var Top = React.createClass({
                         spellCheck: false,
                         onBlur: e => onOrgChange(e.target.textContent)
                     },
-                    org
+                    org ? org.login : undefined
                 ), 
                 ϼ('button', {}, "✔"), // totally useless, just so the user focuses on something else
                 

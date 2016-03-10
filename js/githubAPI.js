@@ -13,6 +13,14 @@ function isContrbutionEvent(event){
 function makeGithubAPI(token){
     
     return {
+        orgInfos(org){
+            return fetchMemoized([
+                GITHUB_API_URL_PREFIX,
+                'orgs',
+                org
+            ].join('/'), token)
+        },
+        
         orgRepos(org){
             return fetchMemoized([
                 GITHUB_API_URL_PREFIX,
@@ -43,7 +51,7 @@ function makeGithubAPI(token){
 
         allRepoEvents(repo){
             // TODO: these reqs should be sequential, not parallel to save for the rate limit
-            return Promise.all(Array(5).fill()
+            return Promise.all(Array(10).fill()
                 .map( (e, i) => i+1 )
                 .map( page => this.repoEvents(repo, page) )
             )
@@ -58,7 +66,7 @@ function makeGithubAPI(token){
                 repos.sort((r1, r2) => new Date(r2.updated_at).getTime() - new Date(r1.updated_at).getTime());
                 console.log('repos', repos);
 
-                const consideredRepos = repos.slice(0, 3);
+                const consideredRepos = repos.slice(0, 5);
 
                 return Promise.all(consideredRepos.map(r => this.allRepoEvents(r.full_name)))
                 .then(events => events.reduce(

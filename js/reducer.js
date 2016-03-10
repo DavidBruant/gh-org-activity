@@ -5,7 +5,7 @@ function reducer(state, action){
     
     switch(action.type){
         case 'ORG_DATA':
-            return state.merge(action.data);
+            return state.merge(action.data).merge({org: action.org});
         case 'GITHUB_API_RATE_INFOS':
             return state.set('githubAPIRateInfos', action.githubAPIRateInfos);
         case 'PERSONAL_ACCESS_TOKEN_INPUT':
