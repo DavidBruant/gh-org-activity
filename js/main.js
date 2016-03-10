@@ -15,16 +15,11 @@ const store = createStore(
 
 /*
     TODO:
-    * Add input for personal access token
-        * call remember('personal-access-token').then
-            * ghapi.authenticatedUser()
-            * store.dispatch({
-                type: 'AUTHENTICATED_USER',
-                user: user
-            })
     * Add input for repo name
+        * replace the h1@contenteditable with an input
         * dispatch({type: 'ORG_CHANGE', org: org}) at init (remember previous org)
         * dispatch({type: 'ORG_CHANGE', org: org}) on input change
+    * Add option to clear PAT storage
     * Add PureRenderMixin thing
         * revise const mapStateToProps = state => state.toJS(); (containers/Top.js) along the way
 */
@@ -33,27 +28,39 @@ let githubAPI = makeGithubAPI();
 
 let previousState = new Immutable.Map();
 
+function testTokenAndDispatchIfValid(token){
+    if(!token)
+        return Promise.reject(new Error('No token'));
+    
+    const ghapi = makeGithubAPI(token);
+    
+    return ghapi.authenticatedUser()
+    .then(user => { // token is valid
+        githubAPI = ghapi;
+
+        store.dispatch({
+            type: 'AUTHENTICATED_USER',
+            user: user
+        })
+    })
+}
+
+
 store.subscribe( () => {
     const state = store.getState();  
     const token = state.get('personalAccessToken');
     
     if(token !== previousState.get('personalAccessToken')){
-        const ghapi = makeGithubAPI(token);
-        ghapi.authenticatedUser()
-        .then(user => { // token is valid
-            githubAPI = ghapi;
-            remember('personal-access-token', token);
-            
-            store.dispatch({
-                type: 'AUTHENTICATED_USER',
-                user: user
-            })
-        })
+        testTokenAndDispatchIfValid(token)
+        .then( () => remember('personal-access-token', token) )
         .catch(err => console.error('authenticatedUser', err, err.stack))
     }
     
     previousState = state;
 });
+
+remember('personal-access-token')
+.then(testTokenAndDispatchIfValid)
 
 /*
     Start !
