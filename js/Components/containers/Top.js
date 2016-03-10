@@ -9,6 +9,12 @@ const mapDispatchToProps = dispatch => {
     return {
         onOrgChange(org){
             console.log('New org!!', org);
+        },
+        onPersonalAccessToken(token){
+            dispatch({
+                type: 'PERSONAL_ACCESS_TOKEN_INPUT',
+                token: token
+            })
         }
     }
 }

@@ -8,6 +8,10 @@ function reducer(state, action){
             return state.merge(action.data);
         case 'GITHUB_API_RATE_INFOS':
             return state.set('githubAPIRateInfos', action.githubAPIRateInfos);
+        case 'PERSONAL_ACCESS_TOKEN_INPUT':
+            return state.set('personalAccessToken', action.token);
+        case 'AUTHENTICATED_USER':
+            return state.set('authenticatedUser', action.user);
         default:
             console.warn('Unknown action.type:', action.type);
             return state;

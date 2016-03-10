@@ -7,11 +7,28 @@ var GithubAPIIndicator = React.createClass({
     
     render: function(){
         const {props} = this;
-        const {login, remaining, limit, reset, method} = props;
+        const {authenticatedUser, remaining, limit, reset, onPersonalAccessToken} = props;
         
         return ϼ('section', {className: 'github-api-indicator'},
-            login ? 'Hi '+login+'!' : undefined,
-            ϼ('div', {}, remaining, '/', limit),
+            authenticatedUser ?
+                'Hi '+authenticatedUser.login+'!' : 
+                ϼ('label', {},
+                    ϼ(
+                        'a',
+                        {
+                            href: 'https://github.com/settings/tokens',
+                            target: '_blank'
+                        },
+                        'Enter personal access token'
+                    ),
+                    ' ',
+                    ϼ('input', {
+                        onChange: e => onPersonalAccessToken(e.target.value.trim())
+                    })  
+                ),
+            ϼ('div', {}, remaining, '/', limit, ' ',
+              authenticatedUser ? '(personal access token)' : '(anonymous)'
+            ),
             ϼ('div', {}, moment(reset).fromNow())
         )
     }

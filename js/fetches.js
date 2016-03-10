@@ -1,7 +1,11 @@
 "use strict";
 
-function fetchJSON(url){
-    return fetch(url, {headers: {'Content-Type': 'application/json'}})
+function fetchJSON(url, token){
+    const headers = { 'Content-Type': 'application/json' };
+    if(token)
+        headers['Authorization'] = 'token '+token;
+    
+    return fetch(url, { headers: headers })
     .then(resp => {
         // this function shouldn't have access to this. TODO figure out another way
         store.dispatch({
@@ -24,10 +28,10 @@ function fetchJSON(url){
     })
 }
 
-function fetchMemoized(url){
+function fetchMemoized(url, token){
     return remember(url)
     .then(data => data ?
         data :
-        fetchJSON(url).then( data => (remember(url, data), data) )
+        fetchJSON(url, token).then( data => (remember(url, data), data) )
     );
 }
