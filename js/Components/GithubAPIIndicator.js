@@ -26,10 +26,15 @@ var GithubAPIIndicator = React.createClass({
                         onChange: e => onPersonalAccessToken(e.target.value.trim())
                     })  
                 ),
-            ϼ('div', {}, remaining, '/', limit, ' ',
-              authenticatedUser ? '(personal access token)' : '(anonymous)'
+            ϼ('div', {}, 'Rate limit: ',
+                ϼ('progress', {
+                    value: remaining,
+                    max: limit,
+                    title: remaining+'/'+limit
+                }, remaining+'/'+limit)
             ),
-            ϼ('div', {}, moment(reset).fromNow())
+            ϼ('div', {}, authenticatedUser ? '(personal access token)' : '(anonymous)'),
+            ϼ('div', {}, 'Reset ', moment(reset).fromNow())
         )
     }
 });

@@ -31,7 +31,7 @@ function makeGithubAPI(token){
         },
 
         repoEvents(repo, page){
-            return fetchMemoized([
+            return fetchJSON([
                 GITHUB_API_URL_PREFIX,
                 'repos',
                 repo,
@@ -66,7 +66,7 @@ function makeGithubAPI(token){
                 repos.sort((r1, r2) => new Date(r2.updated_at).getTime() - new Date(r1.updated_at).getTime());
                 console.log('repos', repos);
 
-                const consideredRepos = repos.slice(0, 5);
+                const consideredRepos = repos.slice(0, 6);
 
                 return Promise.all(consideredRepos.map(r => this.allRepoEvents(r.full_name)))
                 .then(events => events.reduce(

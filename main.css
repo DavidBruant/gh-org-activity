@@ -7,10 +7,15 @@ header{
     text-align: center;
 }
 
-header h1{
+header input{
     display: inline-block;
+    border: 0;
+    font-family: inherit;
+    color: black;
+    font-size: 2em;
+    width: 8em;
     margin: 0;
-    padding: 1em;
+    padding: 0 0.5em;
 }
 header button{
     background-color: transparent;
@@ -29,6 +34,12 @@ header button{
     min-height: 100%;
 }
 
+
+.github-api-indicator{}
+
+.github-api-indicator progress{
+    border: 0;
+}
 
 /*
     Users
@@ -81,7 +92,7 @@ header button{
 */
 .repos{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     position: relative;
@@ -89,20 +100,25 @@ header button{
 }
 
 .repo-events{
-    max-width: 20%;
-    height: 100%;
+    width: 100%;
+    min-height: 7em;
     position: relative;
     flex: 1;
     outline: 1px solid #EEE;
 }
 
+.repo-events .repo-name{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
 
 .event{
     position: absolute;
     width: 1em;
     height: 1em;
     border-radius: 50%;
-    transform: translate(-50%, 50%);
+    transform: translate(50%, -50%);
 }
 
 .event::before{

@@ -49,9 +49,9 @@ var RepositoryEvents = React.createClass({
                         className: 'event',
                         title: moment(date).format('YYYY-MM-DD'),
                         style: {
-                            bottom: 5+(90*(date.getTime() - min)/(max-min))+'%',
+                            left: 5+(90*(date.getTime() - min)/(max-min))+'%',
                             backgroundColor: color,
-                            left: 'calc(50% + '+shift/1.5+'em)'
+                            top: 'calc(50% + '+shift/1.5+'em)'
                         },
                         onClick: function(){
                             console.log(

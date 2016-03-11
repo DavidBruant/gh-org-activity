@@ -15,16 +15,15 @@ const store = createStore(
     TODO:
     * Add input for repo name
         * replace the h1@contenteditable with an input
-        * dispatch({type: 'ORG_CHANGE', org: org}) at init (remember previous org)
         * dispatch({type: 'ORG_CHANGE', org: org}) on input change
     * Add option to clear PAT storage
+    * Add index that remembers the date/time at which each thing is entered
+    
     * Add PureRenderMixin thing
         * revise const mapStateToProps = state => state.toJS(); (containers/Top.js) along the way
 */
 
 let githubAPI = makeGithubAPI();
-
-let previousState = new Immutable.Map();
 
 function testTokenAndDispatchIfValid(token){
     if(!token)
@@ -43,6 +42,7 @@ function testTokenAndDispatchIfValid(token){
     })
 }
 
+let previousState = new Immutable.Map();
 
 store.subscribe( () => {
     const state = store.getState();  
@@ -86,10 +86,13 @@ remember('personal-access-token')
 
     if(tentativeOrg){
         githubAPI.orgInfos(tentativeOrg)
-        .then(org => githubAPI.getOrgData(org.login)
+        .then(org => {
+            store.dispatch({type: 'ORG_DATA', org: org})
+            
+            return githubAPI.getOrgData(org.login)
             .then(data => store.dispatch({type: 'ORG_DATA', data: new Immutable.Map(data), org: org}))
             .catch(err => console.error(err, err.stack))
-        )
+        })
     }
 })
 

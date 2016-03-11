@@ -45,7 +45,7 @@ var GithubOrgActivity = React.createClass({
             ),   
             ϼ('section', {className: 'repos'},
                 ϼ('div', {style: {position: 'absolute', top: 0, right: 0}}, moment(max).format(format)),
-                ϼ('div', {style: {position: 'absolute', bottom: 0, right: 0}}, moment(min).format(format)),
+                ϼ('div', {style: {position: 'absolute', top: 0, left: 0}}, moment(min).format(format)),
                 repos.map(repo => ϼ(RepositoryEvents, 
                     {
                         key: repo.id,
