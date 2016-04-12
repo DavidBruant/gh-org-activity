@@ -13,17 +13,14 @@ const store = createStore(
 
 /*
     TODO:
-    * Add input for repo name
-        * replace the h1@contenteditable with an input
-        * dispatch({type: 'ORG_CHANGE', org: org}) on input change
     * Add option to clear PAT storage
     * Add index that remembers the date/time at which each thing is entered
+    
+    * Bug: repo name blinks on change
     
     * Add PureRenderMixin thing
         * revise const mapStateToProps = state => state.toJS(); (containers/Top.js) along the way
 */
-
-let githubAPI = makeGithubAPI();
 
 function testTokenAndDispatchIfValid(token){
     if(!token)
@@ -33,25 +30,32 @@ function testTokenAndDispatchIfValid(token){
     
     return ghapi.authenticatedUser()
     .then(user => { // token is valid
-        githubAPI = ghapi;
-
-        store.dispatch({
+        return store.dispatch({
             type: 'AUTHENTICATED_USER',
             user: user
         })
     })
+    .then( () => ghapi )
+    // no valid user, stay in anonymous mode
+    .catch( err => makeGithubAPI() )
 }
 
 let previousState = new Immutable.Map();
 
 store.subscribe( () => {
-    const state = store.getState();  
+    const state = store.getState();
     const token = state.get('personalAccessToken');
     
     if(token !== previousState.get('personalAccessToken')){
-        testTokenAndDispatchIfValid(token)
-        .then( () => remember('personal-access-token', token) )
-        .catch(err => console.error('authenticatedUser', err, err.stack))
+        if(token){
+            testTokenAndDispatchIfValid(token)
+            .then( () => remember('personal-access-token', token) )
+            .catch(err => console.error('authenticatedUser', err, err.stack))
+        }
+        else{ // logout
+            forget('personal-access-token')
+        }
+        
     }
     
     previousState = state;
@@ -66,7 +70,7 @@ store.subscribe( () => {
 remember('personal-access-token')
 .then(testTokenAndDispatchIfValid)
 .catch(err => console.error('personal-access-token error', err))
-.then( () => {
+.then( githubAPI => {
     /*
         get org from query parameter
         if none
@@ -85,14 +89,17 @@ remember('personal-access-token')
     }
 
     if(tentativeOrg){
-        githubAPI.orgInfos(tentativeOrg)
-        .then(org => {
-            store.dispatch({type: 'ORG_DATA', org: org})
+        promiseLifecycleActions(store.dispatch, 'ORG', githubAPI.orgInfos, tentativeOrg)
+        .then( org => {
+            console.log('org', org)
             
-            return githubAPI.getOrgData(org.login)
-            .then(data => store.dispatch({type: 'ORG_DATA', data: new Immutable.Map(data), org: org}))
-            .catch(err => console.error(err, err.stack))
-        })
+            return promiseLifecycleActions(
+                store.dispatch,
+                'ORG_COMPLETE',
+                githubAPI.getOrgData.bind(githubAPI),
+                org.login
+            );
+        });
     }
 })
 

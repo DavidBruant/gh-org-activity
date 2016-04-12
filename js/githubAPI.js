@@ -27,7 +27,7 @@ function makeGithubAPI(token){
                 'orgs',
                 org,
                 'repos'
-            ].join('/'), token)
+            ].join('/') + '?per_page=100&type=sources', token)
         },
 
         repoEvents(repo, page){
@@ -59,8 +59,8 @@ function makeGithubAPI(token){
         },
         // fetch repos of the org
 
-        getOrgData(org){
-            return this.orgRepos(org)
+        getOrgData(orgName){
+            return this.orgRepos(orgName)
             .then(repos => {
                 // sort by most recently updated
                 repos.sort((r1, r2) => new Date(r2.updated_at).getTime() - new Date(r1.updated_at).getTime());
@@ -75,8 +75,7 @@ function makeGithubAPI(token){
                 )
                 .then(eventsByRepo => ({
                     repos: consideredRepos,
-                    eventsByRepo: eventsByRepo,
-                    org: org
+                    eventsByRepo: eventsByRepo
                 }))
             });
         }   

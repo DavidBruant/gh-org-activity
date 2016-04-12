@@ -7,7 +7,7 @@ function fetchJSON(url, token){
     
     return fetch(url, { headers: headers })
     .then(resp => {
-        // this function shouldn't have access to this. TODO figure out another way
+        // this function shouldn't have access to store.dispatch. TODO figure out another way
         store.dispatch({
             type: 'GITHUB_API_RATE_INFOS',
             githubAPIRateInfos: new Immutable.Map({

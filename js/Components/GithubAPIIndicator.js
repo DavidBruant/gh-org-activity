@@ -7,11 +7,14 @@ var GithubAPIIndicator = React.createClass({
     
     render: function(){
         const {props} = this;
-        const {authenticatedUser, remaining, limit, reset, onPersonalAccessToken} = props;
+        const {authenticatedUser, remaining, limit, reset, onPersonalAccessToken, onLogout} = props;
         
         return ϼ('section', {className: 'github-api-indicator'},
             authenticatedUser ?
-                'Hi '+authenticatedUser.login+'!' : 
+                ϼ('div', {},
+                    'Hi '+authenticatedUser.login+'!',
+                    ϼ('button', {onClick: onLogout}, 'log out')
+                ) : 
                 ϼ('label', {},
                     ϼ(
                         'a',
